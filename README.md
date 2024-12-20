@@ -1,6 +1,3 @@
-Below is the complete code for your README file, formatted and ready to paste:
-
-```markdown
 # Portfolio Tracker
 
 This project is a **Portfolio Tracker** application that helps users manage their stock portfolios effectively. It features a **React.js frontend** and a **Spring Boot backend**, with a **MySQL database** for data storage. Users can track stocks, visualize their portfolio, and access real-time stock price updates using the Alpha Vantage API.
