@@ -86,6 +86,9 @@ const MyStocks = () => {
   return (
     <div className="container mt-5">
       <h2>My Stocks</h2>
+      <p className="mb-4">
+        Track your portfolio performance and stay updated with the latest prices.
+      </p>
       <button
         className="btn btn-primary mb-3"
         onClick={() => navigate("/form")}
@@ -103,38 +106,58 @@ const MyStocks = () => {
               <th>Quantity</th>
               <th>Buy Price</th>
               <th>Current Price</th>
+              <th>Profit/Loss</th>
               <th>Last Updated</th>
+              <th>Actions</th>
             </tr>
           </thead>
           <tbody>
             {stocks.length === 0 ? (
               <tr>
-                <td colSpan="6">No stocks found in your portfolio.</td>
+                <td colSpan="8">No stocks found in your portfolio.</td>
               </tr>
             ) : (
-              stocks.map((stock, index) => (
-                <tr key={index}>
-                  <td>{stock.name}</td>
-                  <td>{stock.ticker}</td>
-                  <td>{stock.quantity}</td>
-                  <td>${parseFloat(stock.buyPrice).toFixed(2)}</td>
-                  <td>${stock.currentPrice}</td>
-                  <td>{stock.latestDate}</td>
-                  <td>
-                    <button
-                      className="btn btn-warning me-2"
-                      onClick={() => navigate(`/form?ticker=${stock.ticker}`)}
+              stocks.map((stock, index) => {
+                const profitOrLoss =
+                  stock.currentPrice !== "N/A"
+                    ? (stock.currentPrice - stock.buyPrice) * stock.quantity
+                    : 0;
+
+                return (
+                  <tr key={index}>
+                    <td>{stock.name}</td>
+                    <td>{stock.ticker}</td>
+                    <td>{stock.quantity}</td>
+                    <td>${parseFloat(stock.buyPrice).toFixed(2)}</td>
+                    <td>${stock.currentPrice}</td>
+                    <td
+                      style={{
+                        color: profitOrLoss >= 0 ? "green" : "red",
+                        fontWeight: "bold",
+                      }}
                     >
-                      Edit
-                    </button>
-                  </td>
-                  <td>
-                    <button className="btn btn-warning me-2" onClick={() => handleDelete(stock.ticker)}>
-                      Delete
-                    </button>
-                  </td>
-                </tr>
-              ))
+                      {profitOrLoss >= 0
+                        ? `+$${profitOrLoss.toFixed(2)}`
+                        : `-$${Math.abs(profitOrLoss).toFixed(2)}`}
+                    </td>
+                    <td>{stock.latestDate}</td>
+                    <td>
+                      <button
+                        className="btn btn-warning me-2"
+                        onClick={() => navigate(`/form?ticker=${stock.ticker}`)}
+                      >
+                        Edit
+                      </button>
+                      <button
+                        className="btn btn-danger"
+                        onClick={() => handleDelete(stock.ticker)}
+                      >
+                        Delete
+                      </button>
+                    </td>
+                  </tr>
+                );
+              })
             )}
           </tbody>
         </table>
